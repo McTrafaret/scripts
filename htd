@@ -1,0 +1,3 @@
+#!/bin/sh
+
+python3 ~/python_stuff/hex_to_dec.py $1

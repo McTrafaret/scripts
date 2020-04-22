@@ -1,0 +1,14 @@
+#!/bin/sh
+
+api="http://www.nbrb.by/api/exrates/rates?periodicity=0"
+file="/home/udalny/scripts/rate.json"
+mod_date="$(stat -c %y rate.json 2>/dev/null | cut -d \  -f 1)"
+current_date="$(date +%Y-%m-%d)"
+
+no_intrnt () { echo "No connection to Internet" ; exit 1; }
+chk_intrnt () { wget -q --spider google.com || no_intrnt; }
+chk_rate () { chk_intrnt ; GET $api | jq . > $file; }
+
+[ $mod_date = $current_date ] 2>/dev/null || chk_rate
+
+python3 /home/udalny/scripts/curr.py $1 $2
